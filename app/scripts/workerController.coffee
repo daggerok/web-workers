@@ -1,13 +1,15 @@
 worker = null
-disabled = true
+disabled = null
 
 startWorker = ->
-  console.log 'starting worker...'
+  insert 'starting worker...' unless disabled?
 
   disabled = typeof(Worker) is 'undefined'
-  insert "your browser aren't supported web workers" if disabled
+  if disabled
+    insert "your browser aren't supported web workers"
+    return
 
-  worker = new Worker './worker.js' if worker is null
+  worker = new Worker 'worker.js' if worker is null
   worker.onmessage = (event) ->
     insert "received input message: #{event.data}"
   # initiate worker using pseudo random initial interval
