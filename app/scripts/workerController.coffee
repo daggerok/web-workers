@@ -25,4 +25,4 @@ stopWorker = ->
 
 insert = (content) ->
   $ '#content'
-      .prepend "#{content}<br/>"
+    .prepend "#{content}<br/>"
