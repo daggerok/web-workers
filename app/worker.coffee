@@ -8,5 +8,5 @@ self.onmessage = (event) ->
   sendMessage() # emulate slow work here...
 
 sendMessage = => # use fat arrow `=>` for this.-context
-  postMessage "worker response: #{counter++}"
-  setTimeout "sendMessage()", counter
+  postMessage "worker response: #{counter}"
+  setTimeout "sendMessage()", counter++
