@@ -1,31 +1,31 @@
-gulp = require 'gulp'
-remove = require 'gulp-rimraf'
-streams = require 'streamqueue'
-coffee = require 'gulp-coffee'
-concat = require 'gulp-concat'
-uglify = require 'gulp-uglify'
-plumber = require 'gulp-plumber'
-htmlace = require 'gulp-html-replace'
-htmlify = require 'gulp-minify-html'
-jasmine = require 'gulp-jasmine'
-connect = require 'gulp-connect'
+gulp      = require 'gulp'
+remove    = require 'gulp-rimraf'
+streams   = require 'streamqueue'
+coffee    = require 'gulp-coffee'
+concat    = require 'gulp-concat'
+uglify    = require 'gulp-uglify'
+plumber   = require 'gulp-plumber'
+htmlace   = require 'gulp-html-replace'
+htmlify   = require 'gulp-minify-html'
+jasmine   = require 'gulp-jasmine'
+connect   = require 'gulp-connect'
 
-buildDir = 'dist/'
-srcDir = 'app/'
-specDir = 'specs/'
-modules = 'node_modules/'
+buildDir  = 'dist/'
+srcDir    = 'app/'
+specDir   = 'specs/'
+modules   = 'node_modules/'
 coffeeDir = srcDir + 'scripts/'
 
-coffees = '**/*.coffee'
-specs = '**/*Spec.js'
+coffees   = '**/*.coffee'
+specs     = '**/*Spec.js'
 htmlFiles = '**/*.html'
-jsFiles = '**/*.js'
+jsFiles   = '**/*.js'
 
-workers = [srcDir + 'worker.coffee']
-vendors = [modules + 'jquery/dist/jquery.min.js']
-scripts = [coffeeDir + coffees]
+workers   = [srcDir + 'worker.coffee']
+vendors   = [modules + 'jquery/dist/jquery.min.js']
+scripts   = [coffeeDir + coffees]
 jsScripts = [buildDir + jsFiles]
-htmls = [srcDir + htmlFiles]
+htmls     = [srcDir + htmlFiles]
 
 gulp.task 'clean', ->
   gulp.src buildDir
@@ -94,18 +94,13 @@ gulp.task 'html-dev', ->
 gulp.task 'css-dev', ->
   gulp.src modules + 'bootstrap/dist/css/bootstrap.css'
     .pipe gulp.dest buildDir
+    .pipe connect.reload()
 
-gulp.task 'web-workers-dev', ['clean-js'], ->
-  processCoffee workers
-    .pipe plumber()
-    .pipe uglify()
-    .pipe gulp.dest buildDir
-
-vendors = [modules + "jquery/dist/jquery.js"]
+vendors       = [modules + "jquery/dist/jquery.js"]
 coffeeScripts = [srcDir + coffees
                  specDir + coffees]
 
-gulp.task 'js-dev', ['web-workers-dev'], ->
+gulp.task 'js-dev', ['clean-js'], ->
   streams
       objectMode: true,
       gulp.src(vendors),
