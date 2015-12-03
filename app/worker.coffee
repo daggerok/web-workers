@@ -3,10 +3,10 @@ self = exports ? this
 counter = 0
 
 self.onmessage = (event) ->
-  console.log "in self.onmessage with event: #{event.data}"
+  console.log "starting worker... initial data: #{event.data}"
   counter = event.data ? 0
   sendMessage() # emulate slow work here...
 
-sendMessage = => # => means correct this context
-  postMessage "some cool and very slow data: #{counter++}"
+sendMessage = => # use fat arrow `=>` for this.-context
+  postMessage "worker response: #{counter++}"
   setTimeout "sendMessage()", counter

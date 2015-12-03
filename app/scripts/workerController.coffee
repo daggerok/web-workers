@@ -10,15 +10,16 @@ startWorker = ->
   worker = new Worker './worker.js' if worker is null
   
   worker.onmessage = (event) ->
-    text = "called back by the worker: #{event.data}"
-    insert text
+    insert "received input message: #{event.data}"
 
-  worker.postMessage "#{Math.floor(Math.random() * 5 * 333) + 1}" # using pseudo random interval
+  # initiate worker using pseudo random initial interval
+  worker.postMessage "#{Math.floor(Math.random() * 5 * 333) + 1}"
 
 stopWorker = ->
   unless disabled
     console.log 'stopping worker...'
 
+    # shutting down worker
     worker?.terminate()
     worker = null
     disabled = true
