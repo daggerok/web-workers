@@ -13,7 +13,7 @@ startWorker = ->
     insert "received input message: #{event.data}"
 
   # initiate worker using pseudo random initial interval
-  worker.postMessage "#{Math.floor(Math.random() * 5 * 333) + 1}"
+  worker.postMessage "#{Math.floor(Math.random() * 12345) + 1}"
 
 stopWorker = ->
   unless disabled
