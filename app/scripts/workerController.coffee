@@ -4,10 +4,7 @@ disabled = null
 startWorker = ->
   insert 'starting worker...' unless disabled?
 
-  disabled = typeof(Worker) is 'undefined'
-  if disabled
-    insert "your browser aren't supported web workers"
-    return
+  return insert "your browser aren't supported web workers" if disabled = typeof(Worker) is 'undefined'
 
   worker = new Worker 'worker.js' if worker is null
   worker.onmessage = (event) ->
