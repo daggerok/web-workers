@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Web workers</title>
+  <!-- build:css -->
+  <link rel="stylesheet" href="bootstrap.css">
+  <!-- endbuild -->
+</head>
+<body class="container-fluid panel-heading">
+  <button class="btn btn-success" id="startWorker" onclick="startWorker()">Start worker</button>
+  <button class="btn btn-warning" id="stopWorker" onclick="stopWorker()">Stop worker</button>
+  <h1>
+      <div id="head">Web workers test</div>
+  </h1>
+<div id="content"></div>
+<!-- build:js -->
+<script src="jquery.js"></script>
+<script src="worker.js"></script>
+<script src="scripts/workerController.js"></script>
+<!-- endbuild -->
+</body>
+</html>
