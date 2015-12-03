@@ -119,11 +119,11 @@ gulp.task 'jasmine', ['js-dev'], ->
   gulp.src specScripts
     .pipe plumber()
     .pipe jasmine
-      coffee: false
+      coffee: false # test compiled js
       autotest: true
 
 gulp.task 'watch', ['connect'], ->
   gulp.watch coffeeScripts, ['js-dev', 'jasmine']
   gulp.watch htmls, ['html-dev']
 
-gulp.task 'dev', ['css-dev', 'jasmine', 'html-dev', 'jasmine']
+gulp.task 'dev', ['css-dev', 'html-dev', 'jasmine']
