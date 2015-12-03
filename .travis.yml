@@ -8,3 +8,7 @@ script:
   - npm run build
 notifications:
   email: false
+    #recipients:
+    #  - daggerok@gmail.com
+    #on_success: change # [always|never|change]
+    #on_failure: change
