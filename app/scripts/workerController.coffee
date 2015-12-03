@@ -2,7 +2,7 @@ worker = null
 disabled = null
 
 startWorker = ->
-  insert 'starting worker...' unless disabled?
+  insert "#{if disabled? then 'restarting' else 'starting'} worker..."
 
   return insert "your browser aren't supported web workers" if disabled = typeof(Worker) is 'undefined'
 
