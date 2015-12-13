@@ -1,3 +1,24 @@
+srcDir    = 'src/'
+specDir   = 'test/'
+buildDir  = 'dist/'
+modules   = 'node_modules/'
+coffeeDir = srcDir + 'scripts/'
+
+coffees   = '**/*.coffee'
+specs     = '**/*Test.js'
+htmlFiles = '**/*.html'
+jsFiles   = '**/*.js'
+
+workers   = [srcDir + 'worker.coffee']
+vendors   = [modules + 'jquery/dist/jquery.min.js']
+scripts   = [coffeeDir + coffees]
+jsScripts = [buildDir + jsFiles]
+htmls     = [srcDir + htmlFiles]
+
+newVer    = new Date().toISOString().replace(/\..+$|[^\d]/g, '').substr 0, 12
+cssVer    = "?v=#{undefined ? newVer}"
+jsVer     = "?v=#{undefined ? newVer}"
+
 gulp      = require 'gulp'
 remove    = require 'gulp-rimraf'
 streams   = require 'streamqueue'
@@ -10,47 +31,42 @@ htmlify   = require 'gulp-minify-html'
 jasmine   = require 'gulp-jasmine'
 connect   = require 'gulp-connect'
 
-buildDir  = 'dist/'
-srcDir    = 'app/'
-specDir   = 'specs/'
-modules   = 'node_modules/'
-coffeeDir = srcDir + 'scripts/'
-
-coffees   = '**/*.coffee'
-specs     = '**/*Spec.js'
-htmlFiles = '**/*.html'
-jsFiles   = '**/*.js'
-
-workers   = [srcDir + 'worker.coffee']
-vendors   = [modules + 'jquery/dist/jquery.min.js']
-scripts   = [coffeeDir + coffees]
-jsScripts = [buildDir + jsFiles]
-htmls     = [srcDir + htmlFiles]
+require 'colors'
+log = (error) ->
+  console.log [
+    "BUILD FAILED: #{error.name ? ''}".red.underline
+    '\u0007' # beep
+    "#{error.code ? ''}"
+    "#{error.message ? error}"
+    "in #{error.filename ? ''}"
+    "gulp plugin: #{error.plugin ? ''}"
+  ].join '\n'
+  this.end()
 
 gulp.task 'clean', ->
-  gulp.src buildDir
+  gulp.src(buildDir, read: false)
     .pipe remove force: true
 
 gulp.task 'clean-js', ->
-  gulp.src jsScripts
+  gulp.src(jsScripts, read: false)
     .pipe remove force: true
 
-gulp.task 'css', ->
-  gulp.src modules + 'bootstrap/dist/css/bootstrap.min.css'
-    .pipe plumber()
-    .pipe concat 'index.css'
+gulp.task 'css', ['js'], ->
+  gulp.src(modules + 'bootstrap/dist/css/bootstrap.min.css')
+    .pipe(plumber())
+    .pipe(concat 'index.css')
     .pipe gulp.dest buildDir
 
 processCoffee = (scripts) ->
-  gulp.src scripts
-    .pipe plumber()
-    .pipe coffee bare: true
-      .on 'error', -> console?.log error
+  gulp.src(scripts)
+    .pipe(plumber())
+    .pipe(coffee bare: true)
+      .on 'error', log
 
 gulp.task 'web-workers', ['clean-js'], ->
   processCoffee workers
-    .pipe plumber()
-    .pipe uglify()
+    .pipe(plumber())
+    .pipe(uglify())
     .pipe gulp.dest buildDir
 
 gulp.task 'js', ['web-workers'], ->
@@ -58,19 +74,19 @@ gulp.task 'js', ['web-workers'], ->
       objectMode: true,
       gulp.src(vendors),
       processCoffee scripts
-    .pipe plumber()
-    .pipe concat 'index.js'
-    .pipe plumber()
-    .pipe uglify()
+    .pipe(plumber())
+    .pipe(concat 'index.js')
+    .pipe(plumber())
+    .pipe(uglify())
     .pipe gulp.dest buildDir
 
 gulp.task 'html', ->
-  gulp.src htmls
-    .pipe plumber()
+  gulp.src(htmls)
+    .pipe(plumber())
     .pipe htmlace
-      css: '<link rel="stylesheet" href="index.css">'
-      js: '<script src="index.js"></script>'
-    .pipe plumber()
+      css: "index.css#{cssVer}"
+      js: "index.js#{jsVer}"
+    .pipe(plumber())
     .pipe htmlify
       quotes: true
       conditionals: true
@@ -87,13 +103,13 @@ gulp.task 'connect', ->
 gulp.task 'serve', ['default', 'connect']
 
 gulp.task 'html-dev', ->
-  gulp.src htmls
-    .pipe gulp.dest buildDir
+  gulp.src(htmls)
+    .pipe(gulp.dest buildDir)
     .pipe connect.reload()
 
 gulp.task 'css-dev', ->
-  gulp.src modules + 'bootstrap/dist/css/bootstrap.css'
-    .pipe gulp.dest buildDir
+  gulp.src(modules + 'bootstrap/dist/css/bootstrap.css')
+    .pipe(gulp.dest buildDir)
     .pipe connect.reload()
 
 vendors       = [modules + "jquery/dist/jquery.js"]
@@ -105,20 +121,20 @@ gulp.task 'js-dev', ['clean-js'], ->
       objectMode: true,
       gulp.src(vendors),
       processCoffee coffeeScripts
-    .pipe gulp.dest buildDir
+    .pipe(gulp.dest buildDir)
     .pipe connect.reload()
 
 specScripts = [buildDir + specs]
 
-gulp.task 'jasmine', ['js-dev'], ->
-  gulp.src specScripts
-    .pipe plumber()
+gulp.task 'test', ['js-dev'], ->
+  gulp.src(specScripts)
+    .pipe(plumber())
     .pipe jasmine
       coffee: false # test compiled js
       autotest: true
 
-gulp.task 'watch', ['connect'], ->
-  gulp.watch coffeeScripts, ['js-dev', 'jasmine']
+gulp.task 'watch', ['dev', 'connect'], ->
+  gulp.watch coffeeScripts, ['js-dev', 'test']
   gulp.watch htmls, ['html-dev']
 
-gulp.task 'dev', ['css-dev', 'html-dev', 'jasmine']
+gulp.task 'dev', ['js-dev', 'css-dev', 'html-dev', 'test']

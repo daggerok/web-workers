@@ -1,10 +1,10 @@
 web-workers [![build](https://api.travis-ci.org/daggerok/web-workers.svg?branch=master)](https://api.travis-ci.org/daggerok/web-workers.svg?branch=master)
 ============================
     $ git clone https://github.com/daggerok/web-workers && cd web-workers
-    $ npm i
-    $ npm run serve # or: $ npm run watch # for develop
+    $ npm start
+    $ npm run tdd # for develop
 
-web worker: app/worker.coffee
+web worker: src/worker.coffee
 
 worker controller starts and stops worker by clicking needed buttons
 

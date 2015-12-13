@@ -1,19 +1,21 @@
 {
   "name": "web-workers",
   "version": "1.0.0",
-  "description": "",
+  "description": "web workers example",
   "scripts": {
+    "pregulp": "npm install",
     "gulp": "gulp --require coffee-script/register",
-    "clean": "gulp clean",
-    "test": "gulp jasmine",
-    "build": "gulp clean && gulp jasmine && gulp clean && gulp default",
-    "serve": "gulp clean && gulp serve",
-    "watch": "gulp clean && gulp dev && gulp watch"
+    "clean": "npm run gulp clean",
+    "test": "npm run gulp test",
+    "build": "npm run gulp",
+    "start": "npm run gulp serve",
+    "tdd": "npm run gulp watch"
   },
   "author": "Maksim Kostromin",
   "license": "ISC",
   "devDependencies": {
     "coffee-script": "^1.10.0",
+    "colors": "^1.1.2",
     "gulp": "^3.9.0",
     "gulp-coffee": "^2.3.1",
     "gulp-concat": "^2.6.0",

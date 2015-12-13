@@ -6,9 +6,10 @@ cache:
     - node_modules
 script:
   - npm run build
+  - npm test
 notifications:
-  email: false
+  #email: false
     #recipients:
     #  - daggerok@gmail.com
-    #on_success: change # [always|never|change]
-    #on_failure: change
+  on_success: change # [always|never|change]
+  on_failure: never
